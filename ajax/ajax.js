@@ -2,7 +2,9 @@ function serverGet(url, data, doFunction) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if(this.readyState == 4) {
-            doFunction(this.responseText);
+            if(doFunction && doFunction != null) {
+                doFunction(this.responseText);
+            }
         }
     }
     
@@ -18,7 +20,9 @@ function serverPost(url, data, doFunction) {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if(this.readyState == 4) {
-            doFunction(this.responseText);
+            if(doFunction && doFunction != null) {
+                doFunction(this.responseText);
+            }
         }
     }
 
