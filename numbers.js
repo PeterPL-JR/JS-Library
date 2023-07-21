@@ -163,3 +163,58 @@ function decToHex(dec) {
 function hexToDec(hex) {
     return binToDecimal(hexToBinary(hex));
 }
+
+/** Convert binary number to octal */
+function binToOct(bin) {
+    let modulo = bin.length % 3;
+    if(modulo != 0) {
+        for(let i = 0; i < 3 - modulo; i++) {
+            bin = "0" + bin;
+        }
+    }
+
+    let numbers = [];
+    for(let i = 0; i < bin.length / 3; i++) {
+        let binPart = bin.substr(i * 3, 3);
+        let number = 0;
+
+        for(let j = 0; j < 3; j++) {
+            let weight = Math.pow(2, j);
+
+            let binNum = binPart[3 - j - 1];
+            number += binNum * weight;
+        }
+        numbers.push(number);
+    }
+
+    let oct = "";
+    for(let number of numbers) {
+        oct += number + "";
+    }
+    return oct;
+}
+/** Convert octal number to binary */
+function octToBinary(oct) {
+    let bin = "";
+
+    for(let ch of oct) {
+        let binPart = decToBinary(ch);
+        if(binPart.length < 3) {
+            for(let i = 0; i < 3 - binPart.length; i++) {
+                binPart = "0" + binPart;
+            }
+        }
+        bin += binPart;
+    }
+    return bin;
+}
+
+/** Convert decimal number to octal */
+function decToOct(dec) {
+    return binToOct(decToBinary(dec));
+}
+
+/** Convert octal number to decimal */
+function octToDec(oct) {
+    return binToDecimal(octToBinary(oct));
+}
