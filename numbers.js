@@ -1,8 +1,79 @@
 /** Convert decimal number to roman */
 function decToRoman(dec) {
+    if(dec == 0 || dec >= 4000) return;
+    let rom = "";
+
+    const SIMPLE_NUMBERS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+    const DEC_NUMBERS = ["X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
+    const HUN_NUMBERS = ["C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+
+    let decStr = dec + "";
+    for(let i = 0; i < decStr.length; i++) {
+        let n = decStr[decStr.length - i - 1];
+        if(n == 0) continue;
+
+        if(i == 0) rom = SIMPLE_NUMBERS[n - 1];
+        if(i == 1) rom = DEC_NUMBERS[n - 1] + rom;
+        if(i == 2) rom = HUN_NUMBERS[n - 1] + rom;
+        if(i == 3) {
+            for(let j = 1; j <= n; j++) {
+                rom = "M" + rom;
+            }
+        }
+    }
+    return rom;
 }
 /** Convert roman number to decimal */
 function romToDecimal(rom) {
+    let dec = 0;
+
+    const SIMPLE_NUMBERS = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+    const DEC_NUMBERS = ["X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
+    const HUN_NUMBERS = ["C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+
+    while(rom[0] == "M") {
+        dec += 1000;
+        rom = rom.substr(1);
+    }
+
+    let i = 0;
+    while(rom.length != 0) {
+        let factor = Math.pow(10, i);
+        
+        if(i == 0) var chars = SIMPLE_NUMBERS;
+        if(i == 1) var chars = DEC_NUMBERS;
+        if(i == 2) var chars = HUN_NUMBERS;
+
+        let found = false;
+        for(let j = chars.length - 1; j >= 0; j--) {
+            if(j == 4) continue;
+
+            let lastIndex = rom.indexOf(chars[j]);
+            if(lastIndex != -1) {
+                dec += (j + 1) * factor;
+                rom = rom.substr(0, rom.length - chars[j].length);
+                found = true;
+                break;
+            }
+        }
+        if(!found) {
+            let last = rom[rom.length - 1];
+
+            let condV = i == 0 && last == "V";
+            let condL = i == 1 && last == "L";
+            let condD = i == 2 && last == "D";
+
+            if(condV) dec += 5;
+            if(condL) dec += 50;
+            if(condD) dec += 500;
+            
+            if(condV || condL || condD) {
+                rom = rom.substr(0, rom.length - 1);
+            }
+        }
+        i++;
+    }
+    return dec;
 }
 
 /** Convert decimal number to binary */
